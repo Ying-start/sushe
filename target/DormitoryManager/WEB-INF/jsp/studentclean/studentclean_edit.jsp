@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/css/font.css">
     <link rel="stylesheet" href="/css/xadmin.css">
     <link rel="stylesheet" href="/css/pg_btn.css">
-    <script type="text/javascript" src="./js/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="../../js/jquery-3.5.1.min.js"></script>
     <script src="lib/layui/layui.js"></script>
     <script type="text/javascript" src="./js/xadmin.js"></script>
 </head>
@@ -31,7 +31,7 @@
             </label>
             <div class="layui-input-inline">
                 <input type="text" id="s_studentid" name="s_studentid"
-                       autocomplete="off" value="${sessionScope.d.s_studentid}" class="layui-input">
+                       autocomplete="off" value="${sessionScope.d.s_studentid}" class="layui-input" readonly>
             </div>
         </div>
 
@@ -41,7 +41,7 @@
             </label>
             <div class="layui-input-inline">
                 <input type="text" id="s_name" name="s_name"
-                       autocomplete="off" value="${sessionScope.d.s_name}" class="layui-input">
+                       autocomplete="off" value="${sessionScope.d.s_name}" class="layui-input" readonly>
             </div>
         </div>
 
@@ -61,7 +61,7 @@
             </label>
             <div class="layui-input-inline">
                 <input type="text" id="s_classid" name="s_classid"
-                       autocomplete="off" value="${sessionScope.d.s_classid}" class="layui-input">
+                       autocomplete="off" value="${sessionScope.d.s_classid}" class="layui-input" readonly>
             </div>
         </div>
 
@@ -71,7 +71,7 @@
             </label>
             <div class="layui-input-inline">
                 <input type="text" id="s_dormitoryid" name="s_dormitoryid"
-                       autocomplete="off" value="${sessionScope.d.s_dormitoryid}" class="layui-input">
+                       autocomplete="off" value="${sessionScope.d.s_dormitoryid}" class="layui-input" readonly>
             </div>
         </div>
 

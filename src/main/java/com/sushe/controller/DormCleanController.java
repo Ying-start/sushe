@@ -2,9 +2,12 @@ package com.sushe.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sushe.annotation.ExportAs;
+import com.sushe.po.Admin;
+import com.sushe.po.Building;
 import com.sushe.po.DormClean;
 import com.sushe.po.export.DormCleanExport;
 import com.sushe.service.DormCleanService;
+import com.sushe.service.DormitoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +32,8 @@ public class DormCleanController {
     //依赖注入
     @Autowired
     private DormCleanService dormCleanService;
+    @Autowired
+    DormitoryService dormitoryService;
 
     /**
      * 分页查询
@@ -36,11 +41,12 @@ public class DormCleanController {
      * pageSize  显示条数
      */
     @RequestMapping(value = "/findDormClean")
-    public String findDormClean(DormClean dormClean , Model model) {
-
+    public String findDormClean(DormClean dormClean , Model model,HttpSession session, Building building) {
+        Admin currentAdmin = (Admin) session.getAttribute("ad");
+        building= dormitoryService.findManagerBuilding(currentAdmin.getA_id());
+        dormClean.setD_dormbuilding(building.getD_dormbuilding());
         PageInfo<DormClean> dormCleanList = dormCleanService.findPageInfo(dormClean);
         model.addAttribute("pageInfo",dormCleanList);
-
         return "dormclean/dormclean_list";
     }
 

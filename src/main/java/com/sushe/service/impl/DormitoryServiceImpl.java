@@ -5,6 +5,7 @@ package com.sushe.service.impl;
 import com.github.pagehelper.PageInfo;
 import com.sushe.annotation.PageQuery;
 import com.sushe.dao.DormitoryDao;
+import com.sushe.po.Building;
 import com.sushe.po.Dormitory;
 import com.sushe.service.DormitoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,12 @@ public class DormitoryServiceImpl implements DormitoryService {
 		Dormitory d = dormitoryDao.findBuliding(s_dormitoryid);
 		return d;
 	}
+
+	@Override
+	public Building findManagerBuilding(Integer a_id) {
+		return dormitoryDao.findManagerBuilding(a_id);
+	}
+
 	//查询宿舍人员信息
 	@Override
 	@PageQuery

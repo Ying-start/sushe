@@ -2,9 +2,12 @@ package com.sushe.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sushe.annotation.ExportAs;
+import com.sushe.po.Admin;
+import com.sushe.po.Building;
 import com.sushe.po.DormRepair;
 import com.sushe.po.export.DormRepairExport;
 import com.sushe.service.DormRepairService;
+import com.sushe.service.DormitoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +30,9 @@ public class DormRepairController {
     // 依赖注入
     @Autowired
     private DormRepairService dormRepairService;
+    @Autowired
+    DormitoryService dormitoryService;
+
 
     /**
      * 分页查询
@@ -34,8 +40,10 @@ public class DormRepairController {
      * pageSize  显示条数
      */
     @RequestMapping(value = "/findDormRepair")
-    public String findDormRepair(DormRepair dormRepair, Model model) {
-
+    public String findDormRepair(DormRepair dormRepair, Model model,HttpSession session, Building building) {
+        Admin currentAdmin = (Admin) session.getAttribute("ad");
+        building= dormitoryService.findManagerBuilding(currentAdmin.getA_id());
+        dormRepair.setD_dormbuilding(building.getD_dormbuilding());
         model.addAttribute("pageInfo",dormRepairService.findPageInfo(dormRepair));
         return "dormrepair/dormrepair_list";
     }

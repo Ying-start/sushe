@@ -133,7 +133,7 @@
     </table>
 
     <jsp:include page="./page.jsp">
-        <jsp:param name="url" value="/findClassStudent"/>
+        <jsp:param name="url" value="/findDormitoryStudent"/>
     </jsp:include>
 </div>
 
