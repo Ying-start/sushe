@@ -4,6 +4,8 @@ package com.sushe.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sushe.annotation.ExportAs;
+import com.sushe.po.BusinessException;
+import com.sushe.po.Result;
 import com.sushe.po.Student;
 import com.sushe.po.StudentClean;
 import com.sushe.po.export.StudentExport;
@@ -59,28 +61,62 @@ public class StudentController {
 		return "student_list";
 	}
 
-/**
- * 添加学生信息
- */
+	/**
+	 * 添加学生信息
+	 */
+	@RequestMapping(value = "/addStudent", method = RequestMethod.POST)
+	@ResponseBody
+	public Result<String> addStudent(@RequestBody Student student) {
+		try {
+			// 基本校验
+			if (student.getS_studentid() == null ) {
+				return Result.error("学号不能为空");
+			}
+			if (student.getS_name() == null || "".equals(student.getS_name().trim())) {
+				return Result.error("姓名不能为空");
+			}
+			if (student.getS_dormitoryid() == null) {
+				return Result.error("宿舍编号不能为空");
+			}
 
-   @RequestMapping(value = "/addStudent" ,method = RequestMethod.POST)
-   @ResponseBody
-   public String addStudent(@RequestBody Student student) {
-	   int s = studentService.addStudent(student);
-	    return "student_list";
-    }
+			int result = studentService.addStudent(student);
+			if (result > 0) {
+				return Result.success("添加成功");
+			} else {
+				return Result.error("添加失败");
+			}
+		} catch (BusinessException e) {
+			// 业务异常（如床位已满）
+			return Result.error(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Result.error("添加失败：系统错误");
+		}
+	}
 
 	/**
 	 * 修改学生信息
 	 */
 	@RequestMapping(value = "/updateStudent" ,method = RequestMethod.POST )
-	public String updateStudent( Student student) {
-		int s = studentService.updateStudent(student);
-		return "redirect:/findStudent";
+	@ResponseBody
+	public Result<String> updateStudent(@RequestBody Student student) {
+		try {
+			int s = studentService.updateStudent(student);
+			if(s > 0){
+				return Result.success("操作成功");
+			} else {
+				return Result.error("修改失败");
+			}
+		} catch (BusinessException e) {
+			return Result.error(e.getMessage());
+		} catch (Exception e) {
+			return Result.error("系统异常，请联系管理员");
+		}
 	}
 
 
-    @RequestMapping( "/findStudentById")
+
+	@RequestMapping( "/findStudentById")
     public String findStudentById(Integer s_id,HttpSession session) {
 
         Student s= studentService.findStudentById(s_id);

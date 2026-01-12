@@ -341,41 +341,102 @@
             });
         });
 
-        /*添加弹出框*/
+    //     /*添加弹出框*/
+    //     $("#addStudnetBtn").click(function () {
+    //         layer.open({
+    //             type:1,
+    //             title:"添加学生",
+    //             skin:"myclass",
+    //             area:["50%"],
+    //             anim:2,
+    //             content:$("#test").html()
+    //         });
+    //         $("#addEmployeeForm")[0].reset();
+    //         form.on('submit(formDemo)', function(data) {
+    //             // layer.msg('aaa',{icon:1,time:3000});
+    //             var param=data.field;
+    //             // console.log(JSON.stringify(param));
+    //             $.ajax({
+    //                 url: '/addStudent',
+    //                 type: "post",
+    //                 data:JSON.stringify(param),
+    //                 contentType: "application/json; charset=utf-8",
+    //                 success:function(){
+    //                         layer.msg('添加成功', {icon: 1, time: 3000});
+    //                         setTimeout(function () {window.location.href='/findStudent';},2000);
+    //
+    //                 },
+    //                 error:function(){
+    //                     layer.msg('添加失败',{icon:0,time:3000});
+    //                     setTimeout(function () {window.location.href='/findStudent';},2000);
+    //                 }
+    //             });
+    //             // return false;
+    //         });
+    //     });
+    //
+    //
+    // });
         $("#addStudnetBtn").click(function () {
             layer.open({
-                type:1,
-                title:"添加学生",
-                skin:"myclass",
-                area:["50%"],
-                anim:2,
-                content:$("#test").html()
+                type: 1,
+                title: "添加学生",
+                skin: "myclass",
+                area: ["50%"],
+                anim: 2,
+                content: $("#test").html()
             });
+
             $("#addEmployeeForm")[0].reset();
+
             form.on('submit(formDemo)', function(data) {
-                // layer.msg('aaa',{icon:1,time:3000});
-                var param=data.field;
-                // console.log(JSON.stringify(param));
+                var param = data.field;
+
+                // 显示加载动画
+                var loadIndex = layer.load(1, {shade: [0.1, '#fff']});
+
                 $.ajax({
                     url: '/addStudent',
                     type: "post",
-                    data:JSON.stringify(param),
+                    data: JSON.stringify(param),
                     contentType: "application/json; charset=utf-8",
-                    success:function(){
-                            layer.msg('添加成功', {icon: 1, time: 3000});
-                            setTimeout(function () {window.location.href='/findStudent';},2000);
+                    dataType: "json",
+                    success: function(result) {
+                        layer.close(loadIndex);
 
+                        if (result.code === 200) {
+                            layer. msg(result.msg, {
+                                icon: 1,
+                                time: 2000
+                            }, function() {
+                                window.location.href = '/findStudent';
+                            });
+                        } else {
+                            // 显示详细错误信息
+                            layer.msg(result.msg, {
+                                icon: 2,
+                                time: 3000
+                            });
+                        }
                     },
-                    error:function(){
-                        layer.msg('添加失败',{icon:0,time:3000});
-                        setTimeout(function () {window.location.href='/findStudent';},2000);
+                    error: function(xhr) {
+                        layer.close(loadIndex);
+
+                        var errorMsg = '添加失败，请稍后重试';
+                        if (xhr. responseJSON && xhr.responseJSON. msg) {
+                            errorMsg = xhr.responseJSON.msg;
+                        }
+
+                        layer.msg(errorMsg, {
+                            icon: 2,
+                            time: 3000
+                        });
                     }
                 });
-                // return false;
+
+                return false;
             });
         });
-
-
     });
 
 

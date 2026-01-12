@@ -63,6 +63,11 @@ public class DormitoryServiceImpl implements DormitoryService {
 		Dormitory d = dormitoryDao.findDormitoryById(d_id);
 		return  d;
 	}
+	@Override
+	public Dormitory findBuliding(Integer s_dormitoryid) {
+		Dormitory d = dormitoryDao.findBuliding(s_dormitoryid);
+		return d;
+	}
 	//查询宿舍人员信息
 	@Override
 	@PageQuery
