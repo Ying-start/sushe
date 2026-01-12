@@ -30,7 +30,7 @@
             </label>
             <div class="layui-input-inline">
                 <input type="text" id="d_id" name="d_id"
-                       autocomplete="off" value="${sessionScope.d.d_id}" class="layui-input">
+                       autocomplete="off" value="${sessionScope.d.d_id}" class="layui-input" readonly>
             </div>
         </div>
 
@@ -40,7 +40,7 @@
             </label>
             <div class="layui-input-inline">
                 <input type="text" id="d_dormbuilding" name="d_dormbuilding"
-                       autocomplete="off" value="${sessionScope.d.d_dormbuilding}" class="layui-input">
+                       autocomplete="off" value="${sessionScope.d.d_dormbuilding}" class="layui-input" readonly>
             </div>
         </div>
 

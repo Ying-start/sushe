@@ -22,8 +22,10 @@ public interface DormitoryDao {
 	public int deleteDormitory(Integer d_id);   //删除宿舍信息
 	public int updateDormitory(Dormitory dormitory); //修改宿舍信息
 	public Dormitory findDormitoryById(Integer d_id);
+	Dormitory findBuliding(Integer s_dormitoryid);
 
 	public List<Dormitory> findDormitoryStudent(Dormitory dormitory);//查询宿舍人员信息
 	public List<Dormitory> getAll();
+
 
 }

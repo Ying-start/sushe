@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- mybatis的全局配置 基本使用默认 其他可以通过mapper配置文件进行设置 -->
+	<settings>
+		<setting name="lazyLoadingEnabled" value="true"/><!-- 开启懒加载 -->
+		<setting name="aggressiveLazyLoading" value="false"/><!-- 设置懒加载侵入方式 -->
+		<setting name="logImpl" value="STDOUT_LOGGING"/><!-- 使用mybatis 自带的日志管理 -->
+	</settings>
+	
+	<typeAliases>
+		<package name="com.sushe.po"/>
+	</typeAliases>
+</configuration>
