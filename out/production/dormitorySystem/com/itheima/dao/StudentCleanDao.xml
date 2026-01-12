@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.itheima.dao.StudentCleanDao" >
+<mapper namespace="com.sushe.dao.StudentCleanDao" >
 
     <!--分页查询-->
     <select id="getStudentCleanList" parameterType="StudentClean" resultType="StudentClean">
@@ -83,7 +83,7 @@
     </update>
 
     <!--宿舍卫生信息查询信息-->
-    <resultMap type="com.itheima.po.StudentClean" id="cardAndInfo2">
+    <resultMap type="com.sushe.po.StudentClean" id="cardAndInfo2">
         <id property="g_id" column="g_id"/>
         <result property="s_studentid" column="s_studentid" />
         <result property="s_name" column="s_name" />

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.itheima.dao.ClassDao" >
+<mapper namespace="com.sushe.dao.ClassDao" >
 
     <!--分页查询-->
     <select id="getClassList" parameterType="Class" resultType="Class">
@@ -69,12 +69,12 @@
     <!--Mybatis使用Collection进行表关联查询关联一对多数据类型(class为一，student为多)，且需要有id-->
     <!--Association关联一对一类型-->
     <!--班级人员信息查询信息-->
-    <resultMap type="com.itheima.po.Class" id="cardAndInfo2">
+    <resultMap type="com.sushe.po.Class" id="cardAndInfo2">
         <id property="c_id" column="c_id"/>
         <result property="c_classid" column="c_classid"/>
         <result property="c_classname" column="c_classname"/>
         <result property="c_counsellor" column="c_counsellor"/>
-        <collection property="students" ofType="com.itheima.po.Student" javaType="ArrayList">
+        <collection property="students" ofType="com.sushe.po.Student" javaType="ArrayList">
             <id property="s_id" column="s_id"/>
             <result property="s_studentid" column="s_studentid"/>
             <result property="s_name" column="s_name"/>

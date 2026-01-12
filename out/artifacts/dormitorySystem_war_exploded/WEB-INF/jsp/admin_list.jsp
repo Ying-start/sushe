@@ -5,7 +5,7 @@
   Time: 14:06
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java"  import="com.itheima.po.Admin" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"  import="com.sushe.po.Admin" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <html>
@@ -19,7 +19,7 @@
     <link rel="icon" href="/images/favicon.ico" sizes="32x32" />
     <link rel="stylesheet" href="/css/font.css">
     <link rel="stylesheet" href="/css/xadmin.css">
-    <script type="text/javascript" src="/js/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="../../js/jquery-3.5.1.min.js"></script>
     <script src="/lib/layui/layui.js"></script>
     <script type="text/javascript" src="/js/xadmin.js"></script>
     <script src="/layui_exts/excel.js"></script>

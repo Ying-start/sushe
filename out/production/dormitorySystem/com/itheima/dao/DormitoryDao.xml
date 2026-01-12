@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.itheima.dao.DormitoryDao" >
+<mapper namespace="com.sushe.dao.DormitoryDao" >
 
     <!--分页查询-->
     <select id="getDormitoryList" parameterType="Dormitory" resultType="Dormitory">
@@ -75,14 +75,14 @@
     </update>
 
     <!--宿舍人员信息查询信息-->
-    <resultMap type="com.itheima.po.Dormitory" id="cardAndInfo2">
+    <resultMap type="com.sushe.po.Dormitory" id="cardAndInfo2">
         <id property="d_id" column="d_id"/>
         <result property="s_dormitoryid" column="s_dormitoryid" />
         <result property="d_dormbuilding" column="d_dormbuilding" />
         <result property="d_bedtotal" column="d_bedtotal"/>
         <result property="d_bed" column="d_bed"/>
         <result property="a_name" column="a_name"/>
-        <collection property="students" ofType="com.itheima.po.Student" javaType="ArrayList">
+        <collection property="students" ofType="com.sushe.po.Student" javaType="ArrayList">
             <id property="s_id" column="s_id"/>
             <result property="s_studentid" column="s_studentid"/>
             <result property="s_name" column="s_name"/>

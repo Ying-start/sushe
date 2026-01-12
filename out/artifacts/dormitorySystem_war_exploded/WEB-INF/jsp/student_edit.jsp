@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/css/font.css">
     <link rel="stylesheet" href="/css/xadmin.css">
     <link rel="stylesheet" href="/css/pg_btn.css">
-    <script type="text/javascript" src="./js/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="../../js/jquery-3.5.1.min.js"></script>
     <script src="lib/layui/layui.js"></script>
     <script type="text/javascript" src="./js/xadmin.js"></script>
 </head>
