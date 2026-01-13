@@ -41,9 +41,9 @@ public class DormCleanController {
      * pageSize  显示条数
      */
     @RequestMapping(value = "/findDormClean")
-    public String findDormClean(DormClean dormClean , Model model,HttpSession session, Building building) {
+    public String findDormClean(DormClean dormClean , Model model,HttpSession session) {
         Admin currentAdmin = (Admin) session.getAttribute("ad");
-        building= dormitoryService.findManagerBuilding(currentAdmin.getA_id());
+        Building building= dormitoryService.findManagerBuilding(currentAdmin.getA_id());
         dormClean.setD_dormbuilding(building.getD_dormbuilding());
         PageInfo<DormClean> dormCleanList = dormCleanService.findPageInfo(dormClean);
         model.addAttribute("pageInfo",dormCleanList);

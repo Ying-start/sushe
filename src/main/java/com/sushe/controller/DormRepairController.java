@@ -40,10 +40,13 @@ public class DormRepairController {
      * pageSize  显示条数
      */
     @RequestMapping(value = "/findDormRepair")
-    public String findDormRepair(DormRepair dormRepair, Model model,HttpSession session, Building building) {
+    public String findDormRepair(DormRepair dormRepair, Model model,HttpSession session) {
         Admin currentAdmin = (Admin) session.getAttribute("ad");
-        building= dormitoryService.findManagerBuilding(currentAdmin.getA_id());
-        dormRepair.setD_dormbuilding(building.getD_dormbuilding());
+
+        Building building= dormitoryService.findManagerBuilding(currentAdmin.getA_id());
+        if (building!=null) {
+            dormRepair.setD_dormbuilding(building.getD_dormbuilding());
+        }
         model.addAttribute("pageInfo",dormRepairService.findPageInfo(dormRepair));
         return "dormrepair/dormrepair_list";
     }

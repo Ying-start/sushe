@@ -16,15 +16,34 @@
        http://www.springframework.org/schema/mvc
        https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+<!--	数据库密码解密-->
+	<bean id="configurationEncryptor" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+		<property name="config">
+			<bean class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
+				<property name="algorithm" value="PBEWithMD5AndDES"/>
+				<property name="passwordEnvName" value="JASYPT_ENCRYPTOR_PASSWORD"/>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="propertyConfigurer" class="org.jasypt.spring31.properties.EncryptablePropertyPlaceholderConfigurer">
+		<constructor-arg ref="configurationEncryptor"/>
+		<property name="locations">
+			<list>
+				<value>classpath:db.properties</value>
+				<value>classpath:log4j.properties</value>
+			</list>
+		</property>
+	</bean>
+
+
+
+
 	<!-- spring组件扫描 -->
 	<!-- 将含有对应注解的类交由spring管理 可以实现IOC与DI AOP也必须切入由spring管理的类 -->
 	<context:component-scan base-package="com.sushe"/>
 
 
-	<!-- 加载properties -->
-	<!-- 可以在当前的配置文件中使用${key}的形式获取对应的value值 -->
-	<context:property-placeholder location="classpath:db.properties"/>
-	<context:property-placeholder location="classpath:log4j.properties"/>
 
 	<!-- 配置数据源 -->
 	<!-- 使用指定的连接池对数据源进行管理 -->

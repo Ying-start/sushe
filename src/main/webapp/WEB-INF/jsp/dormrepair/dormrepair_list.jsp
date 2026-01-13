@@ -75,7 +75,28 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">宿舍楼：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="d_dormbuilding" class="layui-input" placeholder="请输入宿舍楼">
+
+                        <%-- 1. 下拉选择框 --%>
+                        <select name="d_dormbuilding" lay-verify=""
+                        ${sessionScope.ad.a_power == 1 ? 'disabled' : ''}>
+
+                            <option value="">请选择宿舍楼</option>
+
+                            <%-- 2. 遍历 pageInfo.list 填充选项 --%>
+                            <c:forEach items="${pageInfo.list}" var="item">
+                                <option value="${item.d_dormbuilding}"
+<%--                                    ${sessionScope.ad. == item.d_dormbuilding ? 'selected' : ''}>--%>
+                                        ${item.d_dormbuilding}
+                                </option>
+                            </c:forEach>
+
+                        </select>
+
+                        <%-- 3. 【重要】如果权限是1（下拉框被禁用），添加一个隐藏域来传递数据 --%>
+<%--                        <c:if test="${sessionScope.ad.power == 1}">--%>
+<%--                            <input type="hidden" name="d_dormbuilding" value="${sessionScope.d.d_dormbuilding}">--%>
+<%--                        </c:if>--%>
+
                     </div>
                 </div>
 

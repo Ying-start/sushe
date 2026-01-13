@@ -35,10 +35,12 @@ public class DormitoryController {
 	 * pageSize  显示条数
 	 */
 	@RequestMapping(value = "/findDormitory")
-	public String findDormitory(Dormitory dormitory, Model model, HttpSession session, Building building) {
+	public String findDormitory(Dormitory dormitory, Model model, HttpSession session) {
 		Admin currentAdmin = (Admin) session.getAttribute("ad");
-		building= dormitoryService.findManagerBuilding(currentAdmin.getA_id());
-		dormitory.setD_dormbuilding(building.getD_dormbuilding());
+	 	Building building= dormitoryService.findManagerBuilding(currentAdmin.getA_id());
+		if(building!=null) {
+			dormitory.setD_dormbuilding(building.getD_dormbuilding());
+		}
 	    model.addAttribute("pageInfo",dormitoryService.findPageInfo(dormitory));
 		return "dormitory/dormitory_list";
 	}
