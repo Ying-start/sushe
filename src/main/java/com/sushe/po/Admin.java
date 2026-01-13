@@ -1,6 +1,5 @@
 package com.sushe.po;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -8,6 +7,7 @@ import lombok.Data;
 public class Admin extends BasePageRequest {
     private  Integer a_id;
     private  String  a_username;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private  String  a_password;
     private  String  a_name;

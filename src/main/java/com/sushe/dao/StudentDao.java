@@ -12,10 +12,6 @@ public interface StudentDao {
 	/**
 	 * 进行分页查询
 	 */
-
-	 //获取总条数
-     public Integer totalCount(@Param("s_name") String s_name, @Param("s_studentid")Integer s_studentid,
-							   @Param("s_classid")Integer s_classid,@Param("s_classname")String s_classname);
 	 //获取用户列表
      public List<Student> getStudentList(@Param("s_name") String s_name, @Param("s_studentid")Integer s_studentid,@Param("s_classid")Integer s_classid,
 										 @Param("s_classname")String s_classname);

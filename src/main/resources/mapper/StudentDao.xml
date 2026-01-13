@@ -21,24 +21,6 @@
             </if>
         </where>
     </select>
-    <!--查询数据总数-->
-    <select id="totalCount"  resultType="Integer">
-        select count(s_studentid) from d_student
-        <where>
-              <if test="s_name!=null and s_name!='' ">
-                 and  s_name like  '%${s_name}%'
-               </if>
-              <if test="s_studentid!=null and s_studentid!=0">
-                  and  s_studentid like  '%${s_studentid}%'
-               </if>
-              <if test="s_classid!=null and s_classid!=0">
-                  and  s_classid like  '%${s_classid}%'
-              </if>
-              <if test="s_classname!=null and s_classname!='' ">
-                and  s_classname like  '%${s_classname}%'
-              </if>
-          </where>
-    </select>
     <!--通过id删除学生信息-->
     <delete id="deleteStudent" parameterType="Integer" >
         delete from d_student where s_id=#{s_id}

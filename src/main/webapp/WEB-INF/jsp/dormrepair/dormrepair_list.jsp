@@ -117,7 +117,8 @@
             <th>维修人员</th>
             <th>报修事由</th>
             <th>报修时间</th>
-            <th>更新时间</th>
+            <th>维修状态</th>
+            <th>维修时间</th>
             <th>操作</th>
         </thead>
         <tbody>
@@ -129,7 +130,23 @@
                 <td>${di.r_name}</td>
                 <td>${di.reason}</td>
                 <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${di.create_time}"/></td>
-                <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${di.update_time}"/></td>
+                <td>
+                    <c:choose>
+                        <%-- 当状态为 1 (已维修) 时：只显示绿色徽章，不加点击事件 --%>
+                        <c:when test="${di.r_status == 1}">
+                            <span class="layui-badge layui-bg-green">已维修</span>
+                        </c:when>
+                        <%-- 当状态为 0 或其他 (未维修) 时：显示红色徽章，并添加点击事件 --%>
+                        <c:otherwise>
+                            <%-- onclick调用 js 函数，传入当前记录的 ID --%>
+                            <span class="layui-badge"
+                                  onclick="updateStatus('${di.r_id}')"
+                                  style="cursor: pointer;"
+                                  title="点击标记为已维修">未维修</span>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+                <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${di.r_time}"/></td>
                 <td>
                     <a title="编辑"    id= "updateEdit"    href="/findDormRepairById?r_id=${di.r_id}">
                         <i class="layui-icon">&#xe642;</i>
@@ -280,17 +297,50 @@
             });
         }
 
+        /* 更新维修状态 */
+        function updateStatus(r_id){
+            layer.confirm('确认该报修已处理完毕吗？', {icon: 3, title:'提示'}, function(index){
 
-        /*批量删除*/
-        function delAll (obj,s_id) {
+                // 1. 获取当前时间并格式化为 yyyy-MM-dd HH:mm:ss
+                var now = new Date();
+                var year = now.getFullYear();
+                var month = (now.getMonth() + 1).toString().padStart(2, '0'); // 月份从0开始，需要+1，并补0
+                var day = now.getDate().toString().padStart(2, '0');
+                var hours = now.getHours().toString().padStart(2, '0');
+                var minutes = now.getMinutes().toString().padStart(2, '0');
+                var seconds = now.getSeconds().toString().padStart(2, '0');
 
-            var data = tableCheck.getData();
-            layer.confirm('确认要删除吗？'+data,function(s_id){
-                //捉到所有被选中的，发异步进行删除
-                layer.msg('删除成功', {icon: 1});
-                $(".layui-form-checked").not('.header').parents('tr').remove();
+                // 拼接时间字符串
+                var currentTimeString = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+
+                // 发送 AJAX 请求给后端
+                $.ajax({
+                    url: "/updateDormRepair",
+                    type: "post",
+                    // 2. 将时间放入 data 中发送，参数名设为 r_date
+                    data: {
+                        "r_id": r_id,
+                        "r_status": 1,
+                        "r_time": currentTimeString
+                    },
+                    success: function(data){
+                        if(data){
+                            layer.msg('操作成功!', {icon: 1, time: 1000});
+                            setTimeout(function () {window.location.href='/findDormRepair';},2000);
+                        }else{
+                            layer.msg('操作失败!', {icon: 2});
+                            setTimeout(function () {window.location.href='/findDormRepair';},2000);
+                        }
+                    },
+                    error: function(){
+                        layer.msg('请求失败!', {icon: 2});
+                        setTimeout(function () {window.location.href='/findDormRepair';},2000);
+                    }
+                });
+                layer.close(index);
             });
         }
+
     </script>
 
 

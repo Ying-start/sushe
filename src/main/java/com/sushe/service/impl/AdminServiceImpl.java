@@ -4,7 +4,6 @@ import com.sushe.annotation.PageQuery;
 import com.sushe.dao.AdminDao;
 import com.sushe.po.Admin;
 import com.github.pagehelper.PageInfo;
-import com.github.pagehelper.PageHelper;
 import com.sushe.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -16,19 +16,6 @@
         </where>
     </select>
 
-    <!--查询数据总数-->
-    <select id="totalCount"  resultType="Integer">
-        select count(v_id) from d_visitor
-        <where>
-            <if test="v_name!=null and v_name!='' ">
-                and  v_name like  '%${v_name}%'
-            </if>
-            <if test="v_phone!=null and v_phone!=0">
-                and  v_phone like  '%${v_phone}%'
-            </if>
-        </where>
-    </select>
-
     <!--添加学生信息-->
     <insert id="addVisitor" parameterType="Visitor" keyProperty="v_id" useGeneratedKeys="true">
         insert into d_visitor (v_name,v_phone,v_dormitoryid,v_dormbuilding,create_time)

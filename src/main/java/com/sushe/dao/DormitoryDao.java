@@ -14,8 +14,6 @@ public interface DormitoryDao {
 	 * 进行分页查询
 	 */
 
-	 //获取总条数
-     public Integer totalCount(@Param("a_name") String a_name, @Param("s_dormitoryid") Integer s_dormitoryid,@Param("d_dormbuilding") String d_dormbuilding);
 	 //获取用户列表
      public List<Dormitory> getDormitoryList(@Param("a_name") String a_name, @Param("s_dormitoryid") Integer s_dormitoryid, @Param("d_dormbuilding") String d_dormbuilding);
 

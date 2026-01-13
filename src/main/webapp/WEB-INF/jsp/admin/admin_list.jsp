@@ -268,7 +268,7 @@
                         setTimeout(function () {window.location.href='/findAdmin';},2000);
                     }
                 });
-                // return false;
+                return false;
             });
         });
 

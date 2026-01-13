@@ -15,8 +15,6 @@ public interface DormCleanDao {
     /**
      * 进行分页查询
      */
-    //获取总条数
-    public Integer totalCount(@Param("d_id") Integer d_id, @Param("d_dormbuilding") String d_dormbuilding);
     //获取用户列表
     public List<DormClean> getDormCleanList(@Param("d_id") Integer d_id, @Param("d_dormbuilding") String d_dormbuilding);
 

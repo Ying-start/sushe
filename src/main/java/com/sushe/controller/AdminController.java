@@ -6,8 +6,12 @@ import com.sushe.annotation.ExportAs;
 import com.sushe.annotation.PageQuery;
 import com.sushe.po.Admin;
 import com.github.pagehelper.PageInfo;
+import com.sushe.po.Dormitory;
+import com.sushe.po.Student;
 import com.sushe.po.export.AdminExport;
 import com.sushe.service.AdminService;
+import com.sushe.service.DormitoryService;
+import com.sushe.service.StudentService;
 import com.sushe.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +31,12 @@ public class AdminController {
 	// 依赖注入
 	@Autowired
 	private AdminService adminService;
+
+	@Autowired
+	private StudentService studentService;
+
+	@Autowired
+	private DormitoryService dormitoryService;
 	/**
 	 * 用户登录
 	 */
@@ -41,6 +51,9 @@ public class AdminController {
 		Admin ad = adminService.findAdmin(admin);
 		if(ad!=null){
 			session.setAttribute("ad", ad);
+			request.setAttribute("studentInfo", studentService.findPageInfo(new Student()));
+			System.out.println(studentService.findPageInfo(new Student()));
+			request.setAttribute("dormitoryInfo", dormitoryService.findPageInfo(new Dormitory()));
 			return "homepage";
 		}
 		model.addAttribute("msg", "用户名或密码错误，请重新登录！");
@@ -110,9 +123,12 @@ public class AdminController {
 	 */
 	@RequestMapping( value = "/updateAdmin", method = RequestMethod.POST)
 	public String updateAdmin(Admin admin) {
-
-		admin.setA_password(MD5Util.MD5EncodeUtf8(admin.getA_password()));
-		int a = adminService.updateAdmin(admin);
+		if("".equals(admin.getA_password())){
+			adminService.updateAdmin(admin);
+		}else{
+			admin.setA_password(MD5Util.MD5EncodeUtf8(admin.getA_password()));
+			adminService.updateAdmin(admin);
+		}
 		return "redirect:/findAdmin";
 	}
 

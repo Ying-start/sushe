@@ -18,8 +18,6 @@ public interface AdminDao {
 	 * 进行分页查询
 	 */
 
-	//获取总条数
-	public Integer totalCount(@Param("a_username") String a_username, @Param("a_describe") String a_describe,@Param("a_id") Integer a_id);
 	//获取用户列表
 	public List<Admin> getAdminList(@Param("a_username") String a_username, @Param("a_describe") String a_describe,@Param("a_id") Integer a_id);
 

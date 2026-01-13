@@ -15,23 +15,11 @@
             </if>
         </where>
     </select>
-    <!--查询数据总数-->
-    <select id="totalCount"  resultType="Integer">
-        select count(r_id) from d_dormrepair
-        <where>
-            <if test="d_id!=null and d_id!=0">
-                and  d_id like  '%${d_id}%'
-            </if>
-            <if test="d_dormbuilding !=null and d_dormbuilding !=''">
-                and  d_dormbuilding like  '%${d_dormbuilding}%'
-            </if>
-        </where>
-    </select>
 
     <!--添加宿舍信息-->
     <insert id="addDormRepair" parameterType="DormRepair" keyProperty="r_id" useGeneratedKeys="true">
-        insert into d_dormrepair (d_id,d_dormbuilding,r_name,reason,create_time,update_time)
-        values(#{d_id},#{d_dormbuilding},#{r_name},#{reason},now(),now())
+        insert into d_dormrepair (d_id,d_dormbuilding,r_name,reason,create_time,r_time,r_status)
+        values(#{d_id},#{d_dormbuilding},#{r_name},#{reason},now(),null,0)
     </insert>
 
     <!--通过id删除宿舍信息-->
@@ -63,8 +51,11 @@
             <if test="reason !=null and reason !=''">
                 reason=#{reason},
             </if>
-            <if test="update_time !=null ">
-                update_time=now(),
+            <if test="r_status !=null and r_status != ''">
+                r_status = #{r_status},
+            </if>
+            <if test="r_time !=null ">
+                r_time = #{r_time},
             </if>
         </set>
         where r_id = #{r_id}
