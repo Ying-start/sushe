@@ -76,6 +76,7 @@ public class DormRepairController {
      * 修改学生信息
      */
     @RequestMapping( "/updateDormRepair")
+    @ResponseBody
     public String updateDormRepair( DormRepair dormrepair) {
         int d = dormRepairService.updateDormRepair(dormrepair);
         return "redirect:/findDormRepair";

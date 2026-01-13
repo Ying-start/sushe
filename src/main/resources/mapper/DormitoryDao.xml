@@ -18,21 +18,6 @@
             </if>
         </where>
     </select>
-    <!--查询数据总数-->
-    <select id="totalCount"  resultType="Integer">
-        select count(s_dormitoryid) from d_dormitoryinfo
-        <where>
-            <if test="a_name!=null and a_name!=''">
-                and  a_name like  '%${a_name}%'
-            </if>
-            <if test="s_dormitoryid!=null and s_dormitoryid!=0">
-                and  s_dormitoryid like  '%${s_dormitoryid}%'
-            </if>
-            <if test="d_dormbuilding !=null and d_dormbuilding !=''">
-                and  d_dormbuilding like  '%${d_dormbuilding}%'
-            </if>
-          </where>
-    </select>
 
     <!--添加宿舍信息-->
     <insert id="addDormitory" parameterType="Dormitory" keyProperty="d_id" useGeneratedKeys="true">

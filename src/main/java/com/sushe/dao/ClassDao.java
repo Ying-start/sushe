@@ -12,9 +12,6 @@ public interface ClassDao {
 	/**
 	 * 进行分页查询
 	 */
-
-	 //获取总条数
-     public Integer totalCount(@Param("c_classname") String c_classname, @Param("c_classid") Integer c_classid, @Param("c_counsellor") String c_counsellor);
 	 //获取用户列表
      public List<Class> getClassList(@Param("c_classname") String c_classname, @Param("c_classid") Integer c_classid, @Param("c_counsellor") String c_counsellor);
 

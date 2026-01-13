@@ -2,6 +2,7 @@ package com.sushe.po;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -18,12 +19,14 @@ public class DormRepair extends BasePageRequest{
     private String  d_dormbuilding;
     private String r_name;
     private String reason;
+    private int r_status;
+
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date create_time;
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date update_time;
-
-
+    private Date r_time;
 }
 

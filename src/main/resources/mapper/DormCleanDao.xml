@@ -16,19 +16,6 @@
         </where>
     </select>
 
-    <!--查询数据总数-->
-    <select id="totalCount"  resultType="Integer">
-        select count(g_id) from d_dormgrade
-        <where>
-            <if test="d_id!=null and d_id!=0">
-                and  d_id like  '%${d_id}%'
-            </if>
-            <if test="d_dormbuilding !=null and d_dormbuilding !=''">
-                and  d_dormbuilding like  '%${d_dormbuilding}%'
-            </if>
-        </where>
-    </select>
-
     <!--添加宿舍卫生信息-->
     <insert id="addDormClean" parameterType="DormClean" keyProperty="g_id" useGeneratedKeys="true">
         insert into d_dormgrade (d_id,d_dormbuilding,d_grade,create_time,update_time)

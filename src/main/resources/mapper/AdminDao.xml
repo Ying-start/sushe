@@ -30,21 +30,6 @@
             </if>
         </where>
     </select>
-    <!--查询数据总数-->
-    <select id="totalCount"  resultType="Integer">
-        select count(a_id) from d_admin
-        <where>
-            <if test="a_username!=null and a_username!='' ">
-                and  a_username like  '%${a_username}%'
-            </if>
-            <if test="a_describe!=null and a_describe!=''">
-                and  a_describe like  '%${a_describe}%'
-            </if>
-            <if test="a_id!=null and a_id!=0">
-                and  a_id like  '%${a_id}%'
-            </if>
-        </where>
-    </select>
 
     <!--添加管理员信息-->
     <insert id="addAdmin" parameterType="Admin" keyProperty="a_id" useGeneratedKeys="true">

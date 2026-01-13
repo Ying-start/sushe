@@ -15,8 +15,6 @@ public interface StudentCleanDao {
     /**
      * 进行分页查询
      */
-    //获取总条数
-    public Integer totalCount(@Param("s_studentid") Integer s_studentid, @Param("s_name") String s_name,@Param("s_dormitoryid") Integer s_dormitoryid);
     //获取用户列表
     public List<StudentClean> getStudentCleanList(@Param("s_studentid") Integer s_studentid, @Param("s_name") String s_name, @Param("s_dormitoryid") Integer s_dormitoryid);
 

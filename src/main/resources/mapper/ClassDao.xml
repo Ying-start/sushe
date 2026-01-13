@@ -18,21 +18,7 @@
             </if>
         </where>
     </select>
-    <!--查询数据总数-->
-    <select id="totalCount"  resultType="Integer">
-        select count(c_id) from d_class
-        <where>
-            <if test="c_classname!=null and c_classname!='' ">
-                and  c_classname like  '%${c_classname}%'
-            </if>
-            <if test="c_counsellor!=null and c_counsellor!=''">
-                and  c_counsellor like  '%${c_counsellor}%'
-            </if>
-            <if test="c_classid!=null and c_classid!=0">
-                and  c_classid like  '%${c_classid}%'
-            </if>
-          </where>
-    </select>
+
 
     <!--通过id删除班级信息-->
     <delete id="deleteClass" parameterType="Integer" >
