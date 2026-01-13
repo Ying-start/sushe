@@ -81,13 +81,12 @@
                         <c:choose>
 
                             <c:when test="${sessionScope.ad.a_power == 1}">
-                                <select disabled>
+                                <%-- 宿舍管理员：显示一个可用的下拉框（虽然只有一个选项） --%>
+                                <select name="d_dormbuilding" lay-filter="dormSelect">
                                     <option value="${sessionScope.managerBuildingName}" selected>
                                             ${sessionScope.managerBuildingName}
                                     </option>
                                 </select>
-
-                                <input type="hidden" name="d_dormbuilding" value="${sessionScope.managerBuildingName}">
                             </c:when>
 
                             <c:otherwise>
@@ -264,16 +263,17 @@
 
                 // 【新增】弹窗成功后的回调函数，用于加载下拉框数据
                 success: function(layero, index){
+                    
+                    // 重新渲染表单，确保 layui 能识别弹窗内的表单元素
+                    form.render();
 
-                    // ================= 2. 判断当前身份，决定怎么传 buildingName =================
-
-                    // 试图寻找管理员专用的那个 class
+                    // ================= 1. 判断当前身份，加载宿舍楼下拉框 =================
                     var $adminSelect = layero.find('.ajax-load-building');
+                    var $dormSelect = layero.find('select[name="d_dormbuilding"]');
 
-                    // 【场景 A：管理员 (能找到那个 class)】
+                    // 【场景 A：超级管理员 (能找到 .ajax-load-building)】
                     if ($adminSelect.length > 0) {
-
-                        // A1. 先去加载楼栋列表 (AJAX) ... 代码略 ...
+                        // A1. 加载所有楼栋列表
                         $.ajax({
                             url: '/findAllBuildings',
                             dataType: 'json',
@@ -286,53 +286,40 @@
                                 form.render('select');
                             }
                         });
-
-                        // A2. 监听宿舍楼下拉选择，自动填充管理员姓名
-                        // lay-filter="dormSelect" 对应你 JSP 里的 lay-filter
-                        form.on('select(dormSelect)', function(data){
-                            // data.value 就是当前选中的楼名（例如 "24号楼"）
-                            var buildingName = data.value;
-
-                            // 按需调用原有逻辑
-                            if (typeof loadDormIds === 'function') {
-                                loadDormIds(buildingName);
-                            }
-
-                            // 根据楼名向后端请求管理员姓名，并自动填入
-                            if (buildingName) {
-                                $.get('/findAdminNameByBuilding', { d_dormbuilding: buildingName }, function (res) {
-                                    // res 为管理员姓名字符串
-                                    layero.find('input[name=\"a_name\"]').val(res || '');
-                                });
-                            } else {
-                                layero.find('input[name=\"a_name\"]').val('');
-                            }
-                        });
+                    }
+                    // 【场景 B：宿舍管理员 (只有一个固定的宿舍楼)】
+                    else if ($dormSelect.length > 0) {
+                        // 宿舍管理员的下拉框已经有一个选项了，直接渲染即可
+                        form.render('select');
                     }
 
-                    // 【场景 B：宿管员 (找不到那个 class)】
-                    else {
-                        // B1. 【重点】宿管员如何传值？直接从隐藏域拿！
-                        // 你的 JSP 里写了 <input type="hidden" name="d_dormbuilding" value="...">
-                        // 我们用 jQuery 直接获取它的 value
-                        var fixedBuildingName = layero.find('input[name="d_dormbuilding"]').val();
-
-                        // B2. 拿到值后，立即调用函数
-                        if(fixedBuildingName) {
-                            loadDormIds(fixedBuildingName);
+                    // ================= 2. 监听宿舍楼下拉选择，自动填充管理员姓名 =================
+                    form.on('select(dormSelect)', function(data){
+                        var buildingName = data.value;
+                        
+                        // 根据楼名向后端请求管理员姓名，并自动填入
+                        if (buildingName) {
+                            $.get('/findAdminNameByBuilding', { d_dormbuilding: buildingName }, function (res) {
+                                layero.find('input[name="a_name"]').val(res || '');
+                            });
+                        } else {
+                            layero.find('input[name="a_name"]').val('');
                         }
-                    }
+                    });
 
-                    // ================= 3. 表单提交 (保持不变) =================
+                    // ================= 3. 表单提交事件（使用 layui 的表单提交方式） =================
+                    // 使用弹窗内的表单元素，确保事件绑定正确
                     form.on('submit(formDemo)', function (data) {
-                        // ... 你的提交代码 ...
                         var param = data.field;
+                        
+                        // 发送 AJAX 请求
                         $.ajax({
                             url: '/addDormitory',
                             type: "post",
                             data: JSON.stringify(param),
                             contentType: "application/json; charset=utf-8",
                             success: function () {
+                                layer.close(index); // 关闭弹窗
                                 layer.msg('添加成功', { icon: 1, time: 2000 });
                                 setTimeout(function () { window.location.href = '/findDormitory'; }, 2000);
                             },
@@ -340,7 +327,7 @@
                                 layer.msg('添加失败', { icon: 0, time: 2000 });
                             }
                         });
-                        return false;
+                        return false; // 阻止表单跳转
                     });
                 }
             });

@@ -6,10 +6,12 @@ import com.sushe.annotation.ExportAs;
 import com.sushe.annotation.PageQuery;
 import com.sushe.po.Admin;
 import com.github.pagehelper.PageInfo;
+import com.sushe.po.Building;
 import com.sushe.po.Dormitory;
 import com.sushe.po.Student;
 import com.sushe.po.export.AdminExport;
 import com.sushe.service.AdminService;
+import com.sushe.service.BuildingService;
 import com.sushe.service.DormitoryService;
 import com.sushe.service.StudentService;
 import com.sushe.util.MD5Util;
@@ -37,6 +39,9 @@ public class AdminController {
 
 	@Autowired
 	private DormitoryService dormitoryService;
+
+	@Autowired
+	private BuildingService buildingService;
 	/**
 	 * 用户登录
 	 */
@@ -51,6 +56,13 @@ public class AdminController {
 		Admin ad = adminService.findAdmin(admin);
 		if(ad!=null){
 			session.setAttribute("ad", ad);
+			// 如果是宿舍管理员（a_power == 1），查询并设置其管理的宿舍楼名称
+			if(ad.getA_power() != null && ad.getA_power() == 1) {
+				Building building = buildingService.findManagerBuilding(ad.getA_id());
+				if(building != null) {
+					session.setAttribute("managerBuildingName", building.getD_dormbuilding());
+				}
+			}
 			request.setAttribute("studentInfo", studentService.findPageInfo(new Student()));
 			System.out.println(studentService.findPageInfo(new Student()));
 			request.setAttribute("dormitoryInfo", dormitoryService.findPageInfo(new Dormitory()));

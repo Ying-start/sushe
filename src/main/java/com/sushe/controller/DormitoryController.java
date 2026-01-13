@@ -39,6 +39,8 @@ public class DormitoryController {
 		Building building = buildingService.findManagerBuilding(currentAdmin.getA_id());
 		if(building!=null && currentAdmin.getA_power()!=2) {
 			dormitory.setD_dormbuilding(building.getD_dormbuilding());
+			// 将宿舍楼名称存入 session，供 JSP 页面使用
+			session.setAttribute("managerBuildingName", building.getD_dormbuilding());
 		}
 		model.addAttribute("pageInfo",dormitoryService.findPageInfo(dormitory));
 		return "dormitory/dormitory_list";
