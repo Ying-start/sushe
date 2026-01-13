@@ -10,8 +10,8 @@ public class DormitoryExport implements Serializable {
     private  Integer d_id;
     private  Integer s_dormitoryid;
     private  String  d_dormbuilding;
-    private  String  d_bedtotal;
-    private  String  d_bed;
+    private  Integer  d_bedtotal;
+    private  Integer  d_bed;
     private  String  a_name;
 
     private List<StudentExport> students;

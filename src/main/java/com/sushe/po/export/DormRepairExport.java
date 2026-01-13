@@ -26,8 +26,7 @@ public class DormRepairExport {
     private Date r_time;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date create_time;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date update_time;
+
 
 
 }

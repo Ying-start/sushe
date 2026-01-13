@@ -215,12 +215,11 @@
                         ,'s_dormitoryid'
                         ,'d_dormbuilding'
                         ,'d_bedtotal'
-                        ,'d_bed'
                         ,'a_name'
                     ]);
 
                     // 2. 数组头部新增表头
-                    dt.unshift({d_id: 'ID', s_dormitoryid: '宿舍编号', d_dormbuilding: '宿舍楼', d_bedtotal: '床位总数', d_bed: '医用床位', a_name: '管理员'});
+                    dt.unshift({d_id: 'ID', s_dormitoryid: '宿舍编号', d_dormbuilding: '宿舍楼', d_bedtotal: '床位总数',  a_name: '管理员'});
 
                     // 意思是：A列40px，B列60px(默认)，C列120px，D、E、F等均未定义
                     var colConf = excel.makeColConfig({

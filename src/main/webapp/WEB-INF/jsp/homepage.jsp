@@ -137,7 +137,7 @@
         <li class="layui-nav-item">
             <a href="javascript:;">
                 <%-- 假设有头像，如果没有用默认图标 --%>
-                <img src="/images/avatar_default.png" class="layui-nav-img" onerror="this.src='//t.cn/RCzsdCq'">
+                <img src="/images/01.png" class="layui-nav-img">
                 ${sessionScope.ad.a_username}
             </a>
             <dl class="layui-nav-child">
