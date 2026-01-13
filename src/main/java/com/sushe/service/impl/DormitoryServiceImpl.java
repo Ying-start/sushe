@@ -70,10 +70,7 @@ public class DormitoryServiceImpl implements DormitoryService {
 		return d;
 	}
 
-	@Override
-	public Building findManagerBuilding(Integer a_id) {
-		return dormitoryDao.findManagerBuilding(a_id);
-	}
+
 
 	//查询宿舍人员信息
 	@Override

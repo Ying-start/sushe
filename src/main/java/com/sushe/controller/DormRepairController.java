@@ -6,6 +6,7 @@ import com.sushe.po.Admin;
 import com.sushe.po.Building;
 import com.sushe.po.DormRepair;
 import com.sushe.po.export.DormRepairExport;
+import com.sushe.service.BuildingService;
 import com.sushe.service.DormRepairService;
 import com.sushe.service.DormitoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,9 @@ public class DormRepairController {
     // 依赖注入
     @Autowired
     private DormRepairService dormRepairService;
+
     @Autowired
-    DormitoryService dormitoryService;
+    private BuildingService buildingService;
 
 
     /**
@@ -43,11 +45,14 @@ public class DormRepairController {
     public String findDormRepair(DormRepair dormRepair, Model model,HttpSession session) {
         Admin currentAdmin = (Admin) session.getAttribute("ad");
 
-        Building building= dormitoryService.findManagerBuilding(currentAdmin.getA_id());
+        Building building= buildingService.findManagerBuilding(currentAdmin.getA_id()).get(0);
         if (building!=null) {
             dormRepair.setD_dormbuilding(building.getD_dormbuilding());
+            //前端需要的楼号
+            session.setAttribute("managerBuildingName", building.getD_dormbuilding());
         }
         model.addAttribute("pageInfo",dormRepairService.findPageInfo(dormRepair));
+
         return "dormrepair/dormrepair_list";
     }
 

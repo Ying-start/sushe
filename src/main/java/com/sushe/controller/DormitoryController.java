@@ -8,6 +8,7 @@ import com.sushe.po.Admin;
 import com.sushe.po.Building;
 import com.sushe.po.Dormitory;
 import com.sushe.po.export.DormitoryExport;
+import com.sushe.service.BuildingService;
 import com.sushe.service.DormitoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,8 @@ public class DormitoryController {
 	// 依赖注入
 	@Autowired
 	private DormitoryService dormitoryService;
-
+	@Autowired
+	private BuildingService buildingService;
 	/**
 	 * 分页查询
 	 * pageIndex 当前页码
@@ -37,7 +39,7 @@ public class DormitoryController {
 	@RequestMapping(value = "/findDormitory")
 	public String findDormitory(Dormitory dormitory, Model model, HttpSession session) {
 		Admin currentAdmin = (Admin) session.getAttribute("ad");
-	 	Building building= dormitoryService.findManagerBuilding(currentAdmin.getA_id());
+	 	Building building= buildingService.findManagerBuilding(currentAdmin.getA_id()).get(0);
 		if(building!=null) {
 			dormitory.setD_dormbuilding(building.getD_dormbuilding());
 		}
@@ -100,7 +102,7 @@ public class DormitoryController {
 	@RequestMapping(value = "/findDormitoryStudent")
 	public String findDormitoryStudent(Dormitory dormitory,Model model,HttpSession session, Building building) {
 		Admin currentAdmin = (Admin) session.getAttribute("ad");
-		building= dormitoryService.findManagerBuilding(currentAdmin.getA_id());
+		building= buildingService.findManagerBuilding(currentAdmin.getA_id()).get(0);
 		dormitory.setD_dormbuilding(building.getD_dormbuilding());
 		model.addAttribute("pageInfo",dormitoryService.findDormitoryStudent(dormitory));
 		return "dormitory_Studentlist";

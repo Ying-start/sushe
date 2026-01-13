@@ -18,7 +18,6 @@ public interface DormitoryService {
 	public int updateDormitory(Dormitory dormitory); //修改宿舍信息
 	public Dormitory findDormitoryById(Integer d_id);
 	public Dormitory findBuliding(Integer s_dormitoryid);
-	public Building findManagerBuilding(Integer a_id);
 
 
 	public PageInfo<Dormitory> findDormitoryStudent(Dormitory dormitory);//查询宿舍人员信息

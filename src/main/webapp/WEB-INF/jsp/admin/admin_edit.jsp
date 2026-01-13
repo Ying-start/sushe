@@ -116,7 +116,7 @@
                     console.log(da);
                     layer.msg('更改成功', {icon: 1, time: 2000});
                     setTimeout(function () {
-                        window.location.href = '/findAdmin';
+                        location.reload();
                     }, 2000);
 
                 },

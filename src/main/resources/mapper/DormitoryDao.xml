@@ -36,9 +36,8 @@
     <select id="findBuliding"  parameterType="Integer" resultType="Dormitory" >
         select * from d_dormitoryinfo where s_dormitoryid=#{s_dormitoryid}
     </select>
-    <select id="findManagerBuilding"  parameterType="Integer" resultType="Building" >
-        select * from d_building where a_id=#{a_id}
-    </select>
+
+
 
     <!--修改宿舍信息-->
     <update id="updateDormitory" parameterType="Dormitory">
