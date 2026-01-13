@@ -36,11 +36,11 @@ public class DormitoryController {
 	@RequestMapping(value = "/findDormitory")
 	public String findDormitory(Dormitory dormitory, Model model, HttpSession session) {
 		Admin currentAdmin = (Admin) session.getAttribute("ad");
-	 	Building building= buildingService.findManagerBuilding(currentAdmin.getA_id()).get(0);
-		if(building!=null) {
+		Building building = buildingService.findManagerBuilding(currentAdmin.getA_id());
+		if(building!=null && currentAdmin.getA_power()!=2) {
 			dormitory.setD_dormbuilding(building.getD_dormbuilding());
 		}
-	    model.addAttribute("pageInfo",dormitoryService.findPageInfo(dormitory));
+		model.addAttribute("pageInfo",dormitoryService.findPageInfo(dormitory));
 		return "dormitory/dormitory_list";
 	}
 	@RequestMapping(method = RequestMethod.GET,value = "/findDormitoryByBuilding")
@@ -107,8 +107,10 @@ public class DormitoryController {
 	@RequestMapping(value = "/findDormitoryStudent")
 	public String findDormitoryStudent(Dormitory dormitory,Model model,HttpSession session, Building building) {
 		Admin currentAdmin = (Admin) session.getAttribute("ad");
-		building= buildingService.findManagerBuilding(currentAdmin.getA_id()).get(0);
-		dormitory.setD_dormbuilding(building.getD_dormbuilding());
+		building= buildingService.findManagerBuilding(currentAdmin.getA_id());
+		if(building!=null && currentAdmin.getA_power()!=2) {
+			dormitory.setD_dormbuilding(building.getD_dormbuilding());
+		}
 		model.addAttribute("pageInfo",dormitoryService.findDormitoryStudent(dormitory));
 		return "dormitory_Studentlist";
 	}

@@ -44,8 +44,10 @@ public class DormCleanController {
     @RequestMapping(value = "/findDormClean")
     public String findDormClean(DormClean dormClean , Model model,HttpSession session) {
         Admin currentAdmin = (Admin) session.getAttribute("ad");
-        Building building= buildingService.findManagerBuilding(currentAdmin.getA_id()).get(0);
-        dormClean.setD_dormbuilding(building.getD_dormbuilding());
+        Building building= buildingService.findManagerBuilding(currentAdmin.getA_id());
+        if(building!=null && currentAdmin.getA_power()!=2) {
+            dormClean.setD_dormbuilding(building.getD_dormbuilding());
+        }
         PageInfo<DormClean> dormCleanList = dormCleanService.findPageInfo(dormClean);
         model.addAttribute("pageInfo",dormCleanList);
         return "dormclean/dormclean_list";

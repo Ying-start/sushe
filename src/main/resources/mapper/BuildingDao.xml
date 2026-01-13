@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sushe.dao.BuildingDao">
-    <select id="findManagerBuilding"  parameterType="Integer" resultType="Building" >
+    <select id="findBuildingByAdminId" parameterType="Integer" resultType="com.sushe.po.Building">
+        SELECT b.*
+        FROM d_building b
+                 INNER JOIN d_admin_building ab ON b.b_id = ab.b_id
+        WHERE ab.a_id = #{a_id}
+    </select>
+
+    <select id="findAllBuildings" parameterType="Integer" resultType="com.sushe.po.Building">
         select * from d_building
-        <where>
-            <if test="a_id != 0 and a_id != ''">
-                and a_id = #{a_id}
-            </if>
-        </where>
+    </select>
+
+    <!-- 根据宿舍楼名称查询对应管理员姓名 -->
+    <select id="findAdminNameByBuilding" parameterType="String" resultType="java.lang.String">
+        SELECT a.a_name
+        FROM d_admin a
+                 INNER JOIN d_admin_building ab ON a.a_id = ab.a_id
+                 INNER JOIN d_building b ON ab.b_id = b.b_id
+        WHERE b.d_dormbuilding = #{d_dormbuilding}
+        LIMIT 1
     </select>
 </mapper>

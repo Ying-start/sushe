@@ -49,7 +49,10 @@
     <div class="layui-row">
         <form class="layui-form layui-col-md12 x-so" action="/findDormRepair" >
             <input class="layui-input" placeholder="请输入宿舍编号" name="d_id" id="d_id">
-            <input class="layui-input" placeholder="请输入宿舍楼" name="d_dormbuilding" id="d_dormbuilding">
+            <%-- 只有当权限不等于1（即管理员）时，才显示宿舍楼搜索框 --%>
+            <c:if test="${sessionScope.ad.a_power != 1}">
+                <input class="layui-input" placeholder="请输入宿舍楼" name="d_dormbuilding" id="d_dormbuilding">
+            </c:if>
 
             <input class="layui-input" type="hidden" name="pageIndex" value="1">
             <input class="layui-input" type="hidden" name="pageSize" value="3">
@@ -170,9 +173,6 @@
                 </td>
                 <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${di.r_time}"/></td>
                 <td>
-                    <a title="编辑"    id= "updateEdit"    href="/findDormRepairById?r_id=${di.r_id}">
-                        <i class="layui-icon">&#xe642;</i>
-                    </a>
                     <a title="删除" onclick="member_del(this,'${di.r_id}')" href="javascript:;">
                         <i class="layui-icon">&#xe640;</i>
                     </a>
@@ -196,7 +196,7 @@
             var form = layui.form,
                 $ = layui.jquery,
                 laydate = layui.laydate;
-            var excel = parent.layui.excel;
+            var excel = layui.excel;
 
             // 执行一个laydate实例
             laydate.render({

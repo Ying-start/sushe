@@ -16,12 +16,17 @@ public class BuildingServiceImpl implements BuildingService {
     private BuildingDao buildingDao;
 
     @Override
-    public List<Building> findManagerBuilding(Integer a_id) {
-        return buildingDao.findManagerBuilding(a_id);
+    public Building findManagerBuilding(Integer a_id) {
+        return buildingDao.findBuildingByAdminId(a_id);
     }
 
     @Override
     public List<Building> findBuildings() {
-        return buildingDao.findManagerBuilding(0);
+        return buildingDao.findAllBuildings();
+    }
+
+    @Override
+    public String findAdminNameByBuilding(String d_dormbuilding) {
+        return buildingDao.findAdminNameByBuilding(d_dormbuilding);
     }
 }

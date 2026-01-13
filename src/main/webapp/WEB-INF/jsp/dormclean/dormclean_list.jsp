@@ -153,7 +153,7 @@
             var form = layui.form,
                 $ = layui.jquery,
                 laydate = layui.laydate;
-            var excel = parent.layui.excel;
+            var excel = layui.excel;
 
             //执行一个laydate实例
             laydate.render({

@@ -48,7 +48,6 @@
         <form class="layui-form layui-col-md12 x-so" action="/findAdmin" >
             <input type="hidden" class="layui-input" placeholder="请输入用户名" name="a_id" id="a_id">
             <input class="layui-input" placeholder="请输入用户名" name="a_username" id="a_username">
-            <input class="layui-input" placeholder="请输入级别描述" name="a_describe" id="a_describe" >
 
             <input class="layui-input" type="hidden" name="pageIndex" value="1">
             <input class="layui-input" type="hidden" name="pageSize" value="3">
@@ -57,7 +56,12 @@
     </div>
 
     <xblock>
-        <button id="addStudnetBtn" class="layui-btn layui-btn-normal"> <i class="layui-icon">&#xe654;</i>添加</button>
+        <%-- 使用 c:if 判断：只有当当前登录人的权限(a_power)等于 2 时，才渲染这个按钮 --%>
+        <c:if test="${sessionScope.ad.a_power == 2}">
+            <button id="addStudnetBtn" class="layui-btn layui-btn-normal">
+                <i class="layui-icon">&#xe654;</i>添加
+            </button>
+        </c:if>
         <button class="layui-btn layui-btn-warm" lay-filter="toolbarDemo" lay-submit=""><i class="layui-icon">&#xe67c;</i>导出</button>
     </xblock>
 
@@ -146,16 +150,20 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">级别：</label>
                     <div class="layui-input-block">
-                        <input type="text" lay-verify="required" name="a_power"  class="layui-input" placeholder="请输入级别1-2">
+                        <select name="a_power">
+                            <option value="1" ${sessionScope.a.a_power == 1 ? 'selected' : ''}>宿舍管理员</option>
+                            <option value="2" ${sessionScope.a.a_power == 2 ? 'selected' : ''}>管理员</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">级别描述：</label>
+                    <label class="layui-form-label">宿舍楼</label>
                     <div class="layui-input-block">
-                        <input type="text" name="a_describe" class="layui-input" placeholder="请输入级别描述">
+                        <input type="text" name="a_phone" class="layui-input" placeholder="请输入电话">
                     </div>
                 </div>
+
 
                 <div class="layui-form-item">
                     <div class="layui-input-block">
@@ -178,8 +186,8 @@
     layui.use(['jquery', 'excel', 'form','layer','laydate'], function(){
         var form = layui.form,
             $ = layui.jquery,
-            laydate = layui.laydate;
-        var excel = parent.layui.excel;
+            laydate = layui.laydate,
+            excel = layui.excel;
 
         //执行一个laydate实例
         laydate.render({
@@ -248,6 +256,7 @@
                 area:["50%"],
                 anim:2,
                 content:$("#test").html()
+
             });
             $("#addEmployeeForm")[0].reset();
             form.on('submit(formDemo)', function(data) {
@@ -298,7 +307,7 @@
 
         var power = ${sessionScope.ad.a_power};
         var id = ${sessionScope.ad.a_id};
-        if(power != 1 && id != a_id){
+        if(power != 2 ){
                 layer.alert("对不起，您没有权限:(");
         }
         // else if(power == 1 && id == a_id){

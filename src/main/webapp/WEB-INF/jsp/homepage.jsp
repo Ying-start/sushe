@@ -115,6 +115,14 @@
             width: 80px;
             color: #333;
         }
+
+        /* 退出登录按钮文字颜色改为黑色 */
+        .layui-nav-child dd a p {
+            color: #000 !important;
+        }
+        .layui-nav-child dd a:hover p {
+            color: #000 !important;
+        }
     </style>
 </head>
 <body>

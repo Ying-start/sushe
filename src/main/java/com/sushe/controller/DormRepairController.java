@@ -45,11 +45,9 @@ public class DormRepairController {
     public String findDormRepair(DormRepair dormRepair, Model model,HttpSession session) {
         Admin currentAdmin = (Admin) session.getAttribute("ad");
 
-        Building building= buildingService.findManagerBuilding(currentAdmin.getA_id()).get(0);
-        if (building!=null) {
+        Building building = buildingService.findManagerBuilding(currentAdmin.getA_id());
+        if(building!=null && currentAdmin.getA_power()!=2) {
             dormRepair.setD_dormbuilding(building.getD_dormbuilding());
-            //前端需要的楼号
-            session.setAttribute("managerBuildingName", building.getD_dormbuilding());
         }
         model.addAttribute("pageInfo",dormRepairService.findPageInfo(dormRepair));
 

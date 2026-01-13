@@ -48,8 +48,11 @@
     <div class="layui-row">
         <form class="layui-form layui-col-md12 x-so" action="/findDormitory" >
             <input class="layui-input" placeholder="请输入宿舍编号" name="s_dormitoryid" id="s_dormitoryid">
-            <input class="layui-input" placeholder="请输入宿舍楼" name="d_dormbuilding" id="d_dormbuilding">
-            <input class="layui-input" placeholder="请输入管理员姓名" name="a_name" id="a_name">
+            <c:if test="${sessionScope.ad.a_power ==2}">
+                <input class="layui-input" placeholder="请输入宿舍楼" name="d_dormbuilding" id="d_dormbuilding">
+                <input class="layui-input" placeholder="请输入管理员姓名" name="a_name" id="a_name">
+            </c:if>
+
 
             <input class="layui-input" type="hidden" name="pageIndex" value="1">
             <input class="layui-input" type="hidden" name="pageSize" value="3">
@@ -75,7 +78,25 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">宿舍楼：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="d_dormbuilding" class="layui-input" placeholder="请输入宿舍楼">
+                        <c:choose>
+
+                            <c:when test="${sessionScope.ad.a_power == 1}">
+                                <select disabled>
+                                    <option value="${sessionScope.managerBuildingName}" selected>
+                                            ${sessionScope.managerBuildingName}
+                                    </option>
+                                </select>
+
+                                <input type="hidden" name="d_dormbuilding" value="${sessionScope.managerBuildingName}">
+                            </c:when>
+
+                            <c:otherwise>
+                                <select name="d_dormbuilding" lay-filter="dormSelect" class="ajax-load-building">
+                                    <option value="">数据加载中...</option>
+                                </select>
+                            </c:otherwise>
+
+                        </c:choose>
                     </div>
                 </div>
 
@@ -96,7 +117,10 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">管理员：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="a_name" class="layui-input" placeholder="请输入管理员姓名">
+                        <%-- 宿管员自己添加时，默认是当前登录管理员 --%>
+                        <input type="text" name="a_name" class="layui-input"
+                               placeholder="请输入管理员姓名"
+                               value="${sessionScope.ad.a_name}">
                     </div>
                 </div>
 
@@ -163,7 +187,7 @@
         var form = layui.form,
             $ = layui.jquery,
             laydate = layui.laydate;
-        var excel = parent.layui.excel;
+        var excel =layui.excel;
 
         //执行一个laydate实例
         laydate.render({
@@ -228,37 +252,97 @@
             });
         });
 
-        /*添加弹出框*/
+        /* 添加弹出框逻辑 - 修改后 */
         $("#addStudnetBtn").click(function () {
             layer.open({
-                type:1,
-                title:"添加宿舍",
-                skin:"myclass",
-                area:["50%"],
-                anim:2,
-                content:$("#test").html()
-            });
-            $("#addEmployeeForm")[0].reset();
-            form.on('submit(formDemo)', function(data) {
-                // layer.msg('aaa',{icon:1,time:3000});
-                var param=data.field;
-                // console.log(JSON.stringify(param));
-                $.ajax({
-                    url: '/addDormitory',
-                    type: "post",
-                    data:JSON.stringify(param),
-                    contentType: "application/json; charset=utf-8",
-                    success:function(){
-                            layer.msg('添加成功', {icon: 1, time: 3000});
-                            setTimeout(function () {window.location.href='/findDormitory';},2000);
+                type: 1,
+                title: "添加宿舍",
+                skin: "myclass",
+                area: ["50%"],
+                anim: 2,
+                content: $("#test").html(),
 
-                    },
-                    error:function(){
-                        layer.msg('添加失败',{icon:0,time:3000});
-                        setTimeout(function () {window.location.href='/findDormitory';},2000);
+                // 【新增】弹窗成功后的回调函数，用于加载下拉框数据
+                success: function(layero, index){
+
+                    // ================= 2. 判断当前身份，决定怎么传 buildingName =================
+
+                    // 试图寻找管理员专用的那个 class
+                    var $adminSelect = layero.find('.ajax-load-building');
+
+                    // 【场景 A：管理员 (能找到那个 class)】
+                    if ($adminSelect.length > 0) {
+
+                        // A1. 先去加载楼栋列表 (AJAX) ... 代码略 ...
+                        $.ajax({
+                            url: '/findAllBuildings',
+                            dataType: 'json',
+                            success: function(data){
+                                var html = '<option value="">请选择宿舍楼</option>';
+                                $.each(data, function(i, item){
+                                    html += '<option value="'+item.d_dormbuilding+'">'+item.d_dormbuilding+'</option>';
+                                });
+                                $adminSelect.html(html);
+                                form.render('select');
+                            }
+                        });
+
+                        // A2. 监听宿舍楼下拉选择，自动填充管理员姓名
+                        // lay-filter="dormSelect" 对应你 JSP 里的 lay-filter
+                        form.on('select(dormSelect)', function(data){
+                            // data.value 就是当前选中的楼名（例如 "24号楼"）
+                            var buildingName = data.value;
+
+                            // 按需调用原有逻辑
+                            if (typeof loadDormIds === 'function') {
+                                loadDormIds(buildingName);
+                            }
+
+                            // 根据楼名向后端请求管理员姓名，并自动填入
+                            if (buildingName) {
+                                $.get('/findAdminNameByBuilding', { d_dormbuilding: buildingName }, function (res) {
+                                    // res 为管理员姓名字符串
+                                    layero.find('input[name=\"a_name\"]').val(res || '');
+                                });
+                            } else {
+                                layero.find('input[name=\"a_name\"]').val('');
+                            }
+                        });
                     }
-                });
-                // return false;
+
+                    // 【场景 B：宿管员 (找不到那个 class)】
+                    else {
+                        // B1. 【重点】宿管员如何传值？直接从隐藏域拿！
+                        // 你的 JSP 里写了 <input type="hidden" name="d_dormbuilding" value="...">
+                        // 我们用 jQuery 直接获取它的 value
+                        var fixedBuildingName = layero.find('input[name="d_dormbuilding"]').val();
+
+                        // B2. 拿到值后，立即调用函数
+                        if(fixedBuildingName) {
+                            loadDormIds(fixedBuildingName);
+                        }
+                    }
+
+                    // ================= 3. 表单提交 (保持不变) =================
+                    form.on('submit(formDemo)', function (data) {
+                        // ... 你的提交代码 ...
+                        var param = data.field;
+                        $.ajax({
+                            url: '/addDormitory',
+                            type: "post",
+                            data: JSON.stringify(param),
+                            contentType: "application/json; charset=utf-8",
+                            success: function () {
+                                layer.msg('添加成功', { icon: 1, time: 2000 });
+                                setTimeout(function () { window.location.href = '/findDormitory'; }, 2000);
+                            },
+                            error: function () {
+                                layer.msg('添加失败', { icon: 0, time: 2000 });
+                            }
+                        });
+                        return false;
+                    });
+                }
             });
         });
 
