@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sushe.dao.BuildingDao">
+    <select id="findManagerBuilding"  parameterType="Integer" resultType="Building" >
+        select * from d_building
+        <where>
+            <if test="a_id != 0 and a_id != ''">
+                and a_id = #{a_id}
+            </if>
+        </where>
+    </select>
+</mapper>
