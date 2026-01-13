@@ -13,10 +13,7 @@ import com.sushe.service.DormitoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -45,6 +42,14 @@ public class DormitoryController {
 		}
 	    model.addAttribute("pageInfo",dormitoryService.findPageInfo(dormitory));
 		return "dormitory/dormitory_list";
+	}
+	@RequestMapping(method = RequestMethod.GET,value = "/findDormitoryByBuilding")
+	@ResponseBody
+	public List<Dormitory> findDormitoryByBuilding(@RequestParam("d_dormbuilding") String  d_dormbuilding) {
+		Dormitory dormitory = new Dormitory();
+		dormitory.setD_dormbuilding(d_dormbuilding);
+		PageInfo<Dormitory> pageInfo = dormitoryService.findPageInfo(dormitory);
+		return pageInfo.getList();
 	}
 
 	/**

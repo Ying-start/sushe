@@ -90,7 +90,9 @@
             <td>${ai.a_name}</td>
             <td>${ai.a_phone}</td>
             <%--<td>${ai.a_power}</td>--%>
-            <td>${ai.a_describe}</td>
+            <td>
+                ${ai.a_power == 1 ? '宿舍管理员' : '管理员'}
+            </td>
             <td class="td-manage">
                 <%--href="/findAdminById?a_id=${ai.a_id}"--%>
                 <a title="编辑" class="updateEdit" href="#">
@@ -279,12 +281,14 @@
     $(".updateEdit").click(function () {
         var myid = $(this).parent("td").parent("tr").children(".myid").html();
         //判断
-        var admin_id = ${sessionScope.ad.a_id};
-        if(admin_id != myid){
+        var power = ${sessionScope.ad.a_power};
+        var a_id = ${sessionScope.ad.a_id}
+        if(power != 2 && a_id != myid){
             layer.alert("对不起，您没有权限:(");
         }else {
             <%--window.location.href = "/findAdminById?a_id=${ai.a_id}";--%>
             window.location.href = "/findAdminById?a_id=" + myid;
+
         }
     });
 

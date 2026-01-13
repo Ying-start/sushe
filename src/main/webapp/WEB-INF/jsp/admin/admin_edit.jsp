@@ -31,7 +31,9 @@
             </label>
             <div class="layui-input-inline">
                 <input type="text" id="a_username" name="a_username"
-                       autocomplete="off" value="${sessionScope.a.a_username}" class="layui-input">
+                       autocomplete="off" value="${sessionScope.a.a_username}" class="layui-input ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'layui-disabled' : ''}"
+
+                ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'disabled' : ''}>
             </div>
         </div>
 
@@ -41,7 +43,14 @@
             </label>
             <div class="layui-input-inline">
                 <input type="password" id="a_password" name="a_password"
-                       autocomplete="off" placeholder="如需更改密码，请输入新的密码" class="layui-input">
+                       autocomplete="off"
+                       class="layui-input ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'layui-disabled' : ''}"
+
+                <%-- 1. 动态判断 placeholder 提示语 --%>
+                       placeholder="${sessionScope.ad.a_id != sessionScope.a.a_id ? '无权修改他人密码' : '如需更改密码，请输入新的密码'}"
+
+                <%-- 2. 核心逻辑：如果登录ID 不等于 被编辑ID，则禁用输入框 --%>
+                ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'disabled' : ''}>
             </div>
         </div>
 
@@ -50,8 +59,12 @@
                 <span class="">姓名</span>
             </label>
             <div class="layui-input-inline">
+                <%-- 注意下面 layui-input 后面加了一个空格 --%>
                 <input type="text" id="a_name" name="a_name"
-                       autocomplete="off" value="${sessionScope.a.a_name}" class="layui-input">
+                       autocomplete="off"
+                       value="${sessionScope.a.a_name}"
+                       class="layui-input ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'layui-disabled' : ''}"
+                ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'disabled' : ''}>
             </div>
         </div>
 
@@ -61,29 +74,34 @@
             </label>
             <div class="layui-input-inline">
                 <input type="text" id="a_phone" name="a_phone"
-                       autocomplete="off" value="${sessionScope.a.a_phone}" class="layui-input">
+                       autocomplete="off" value="${sessionScope.a.a_phone}" class="layui-input ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'layui-disabled' : ''}"
+
+                ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'disabled' : ''}>
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label for="a_power" class="layui-form-label">
-                <span class="">级别</span>
-            </label>
+            <label class="layui-form-label">级别</label>
             <div class="layui-input-inline">
-                <input type="text" id="a_power" name="a_power"
-                       autocomplete="off" value="${sessionScope.a.a_power}" class="layui-input">
+
+                <%-- 1. 下拉框 --%>
+                <%-- 逻辑：如果当前登录用户(ad)是宿管(1)，则添加 disabled 属性 --%>
+                <select name="a_power"
+                ${sessionScope.ad.a_power == 1 ? 'disabled' : ''}>
+
+                    <option value="1" ${sessionScope.a.a_power == 1 ? 'selected' : ''}>宿舍管理员</option>
+                    <option value="2" ${sessionScope.a.a_power == 2 ? 'selected' : ''}>管理员</option>
+                </select>
+
+                <%-- 2. 隐藏域 (关键！) --%>
+                <%-- 如果下拉框被禁用了，必须用这个隐藏域把值传回去，否则后台接收到的 power 会是 null --%>
+                <c:if test="${sessionScope.ad.a_power == 1}">
+                    <input type="hidden" name="a_power" value="${sessionScope.a.a_power}">
+                </c:if>
+
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <label for="a_describe" class="layui-form-label">
-                <span class="">级别描述</span>
-            </label>
-            <div class="layui-input-inline">
-                <input type="text" id="a_describe" name="a_describe"
-                       autocomplete="off" value="${sessionScope.a.a_describe}" class="layui-input">
-            </div>
-        </div>
 
 
         <div class="layui-form-item" id="btn_xg">

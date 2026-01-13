@@ -68,7 +68,9 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">宿舍编号：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="d_id" class="layui-input" placeholder="请输入宿舍编号">
+                        <select name="d_id" id="dormIdSelect" lay-filter="dormIdSelect">
+                            <option value="">请先选择宿舍楼</option>
+                        </select>
                     </div>
                 </div>
 
@@ -259,35 +261,95 @@
                     anim: 2,
                     content: $("#test").html(), // 获取 JSP 中写好的模版内容
 
+
+
+
                     // 2. 弹窗成功后的回调
                     success: function (layero, index) {
 
-                        // --- A. 处理下拉框数据加载 (权限控制) ---
-                        var $targetSelect = layero.find('.ajax-load-building');
-                        if ($targetSelect.length > 0) {
-                            // 如果是管理员，发请求加载楼宇
+                        // ================= 1. 定义通用函数：去后台查宿舍号 =================
+                        // 这个 buildingName 就是你问的参数，它由下面两处逻辑分别传入
+                        function loadDormIds(buildingName) {
+                            var $dormIdSelect = layero.find('#dormIdSelect'); // 找到宿舍号下拉框
+
+                            // 1.1 如果没传楼名（比如管理员选了“请选择”），清空宿舍号
+                            if (!buildingName) {
+                                $dormIdSelect.html('<option value="">请先选择宿舍楼</option>');
+                                form.render('select');
+                                return;
+                            }
+
+                            $dormIdSelect.html('<option value="">加载中...</option>');
+                            form.render('select');
+
+                            // 1.2 发送 AJAX
                             $.ajax({
-                                url: '/findAllBuildings',
+                                url: '/findDormitoryByBuilding',
                                 type: 'GET',
+                                data: { "d_dormbuilding": buildingName }, // 【这里】把参数传给后端
                                 dataType: 'json',
                                 success: function (data) {
-                                    var html = '<option value="">请选择宿舍楼</option>';
-                                    $.each(data, function (i, item) {
-                                        html += '<option value="' + item.d_dormbuilding + '">' + item.d_dormbuilding + '</option>';
-                                    });
-                                    $targetSelect.html(html);
-                                    form.render('select'); // 刷新渲染
+                                    var html = '<option value="">请选择宿舍编号</option>';
+                                    if (data && data.length > 0) {
+                                        $.each(data, function (i, item) {
+                                            html += '<option value="' + item.s_dormitoryid + '">' + item.s_dormitoryid + '</option>';
+                                        });
+                                    } else {
+                                        html += '<option value="">该楼暂无宿舍</option>';
+                                    }
+                                    $dormIdSelect.html(html);
+                                    form.render('select');
                                 }
                             });
-                        } else {
-                            // 如果是宿管员，直接渲染(显示禁用的下拉框)
-                            form.render('select');
                         }
 
-                        // --- B. 绑定表单提交事件 ---
-                        // 【关键修改】将 form.on 放在 success 内部，
-                        // 并先解绑，防止多次点击导致重复提交
+                        // ================= 2. 判断当前身份，决定怎么传 buildingName =================
+
+                        // 试图寻找管理员专用的那个 class
+                        var $adminSelect = layero.find('.ajax-load-building');
+
+                        // 【场景 A：管理员 (能找到那个 class)】
+                        if ($adminSelect.length > 0) {
+
+                            // A1. 先去加载楼栋列表 (AJAX) ... 代码略 ...
+                            $.ajax({
+                                url: '/findAllBuildings',
+                                dataType: 'json',
+                                success: function(data){
+                                    var html = '<option value="">请选择宿舍楼</option>';
+                                    $.each(data, function(i, item){
+                                        html += '<option value="'+item.d_dormbuilding+'">'+item.d_dormbuilding+'</option>';
+                                    });
+                                    $adminSelect.html(html);
+                                    form.render('select');
+                                }
+                            });
+
+                            // A2. 【重点】管理员如何传值？通过监听事件！
+                            // lay-filter="dormSelect" 对应你 JSP 里的 lay-filter
+                            form.on('select(dormSelect)', function(data){
+                                // data.value 就是管理员当前选中的楼名（例如 "24号楼"）
+                                // 我们把它传给函数
+                                loadDormIds(data.value);
+                            });
+                        }
+
+                        // 【场景 B：宿管员 (找不到那个 class)】
+                        else {
+                            // B1. 【重点】宿管员如何传值？直接从隐藏域拿！
+                            // 你的 JSP 里写了 <input type="hidden" name="d_dormbuilding" value="...">
+                            // 我们用 jQuery 直接获取它的 value
+                            var fixedBuildingName = layero.find('input[name="d_dormbuilding"]').val();
+
+                            // B2. 拿到值后，立即调用函数
+                            if(fixedBuildingName) {
+                                loadDormIds(fixedBuildingName);
+                            }
+                        }
+
+                        // ================= 3. 表单提交 (保持不变) =================
                         form.on('submit(formDemo)', function (data) {
+                            // ... 你的提交代码 ...
                             var param = data.field;
                             $.ajax({
                                 url: '/addDormRepair',
@@ -302,9 +364,10 @@
                                     layer.msg('添加失败', { icon: 0, time: 2000 });
                                 }
                             });
-                            return false; // 阻止表单默认跳转
+                            return false;
                         });
                     }
+
                 });
             });
 

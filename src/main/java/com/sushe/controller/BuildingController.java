@@ -19,7 +19,8 @@ public class BuildingController {
 
     @RequestMapping(method = RequestMethod.GET,value = "/findAllBuildings")
     @ResponseBody
-    public List<Building> findAllBuildings(Model model) {
+    public List<Building> findAllBuildings() {
         return buildingService.findBuildings();
     }
+
 }
