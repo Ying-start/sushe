@@ -1,5 +1,6 @@
 package com.sushe.dao;
 
+import com.sushe.po.Building;
 import com.sushe.po.Dormitory;
 import org.apache.ibatis.annotations.Param;
 
@@ -26,4 +27,5 @@ public interface DormitoryDao {
 	public List<Dormitory> getAll();
 
 
+    Building findManagerBuilding(Integer a_id);
 }

@@ -10,13 +10,9 @@ public class Admin extends BasePageRequest {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private  String  a_password;
-
     private  String  a_name;
     private  Integer a_phone;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private  Integer a_power;
-
     private  String  a_describe;
 
 }

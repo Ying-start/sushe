@@ -36,6 +36,10 @@
     <select id="findBuliding"  parameterType="Integer" resultType="Dormitory" >
         select * from d_dormitoryinfo where s_dormitoryid=#{s_dormitoryid}
     </select>
+    <select id="findManagerBuilding"  parameterType="Integer" resultType="Building" >
+        select * from d_building where a_id=#{a_id}
+    </select>
+
     <!--修改宿舍信息-->
     <update id="updateDormitory" parameterType="Dormitory">
         update d_dormitoryinfo
@@ -87,6 +91,9 @@
         <where>
             <if test="s_dormitoryid != null and s_dormitoryid != ''">
              and dormitoryinfos.s_dormitoryid = #{s_dormitoryid}
+            </if>
+            <if test="d_dormbuilding != null and d_dormbuilding != ''">
+                and dormitoryinfos.d_dormbuilding = #{d_dormbuilding}
             </if>
         </where>
     </select>

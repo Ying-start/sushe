@@ -4,6 +4,8 @@ package com.sushe.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sushe.annotation.ExportAs;
+import com.sushe.po.Admin;
+import com.sushe.po.Building;
 import com.sushe.po.Dormitory;
 import com.sushe.po.export.DormitoryExport;
 import com.sushe.service.DormitoryService;
@@ -33,9 +35,11 @@ public class DormitoryController {
 	 * pageSize  显示条数
 	 */
 	@RequestMapping(value = "/findDormitory")
-	public String findDormitory(Dormitory dormitory,Model model) {
-
-	  model.addAttribute("pageInfo",dormitoryService.findPageInfo(dormitory));
+	public String findDormitory(Dormitory dormitory, Model model, HttpSession session, Building building) {
+		Admin currentAdmin = (Admin) session.getAttribute("ad");
+		building= dormitoryService.findManagerBuilding(currentAdmin.getA_id());
+		dormitory.setD_dormbuilding(building.getD_dormbuilding());
+	    model.addAttribute("pageInfo",dormitoryService.findPageInfo(dormitory));
 		return "dormitory/dormitory_list";
 	}
 
@@ -92,7 +96,10 @@ public class DormitoryController {
 	 * 宿舍人员信息查询
 	 */
 	@RequestMapping(value = "/findDormitoryStudent")
-	public String findDormitoryStudent(Dormitory dormitory,Model model) {
+	public String findDormitoryStudent(Dormitory dormitory,Model model,HttpSession session, Building building) {
+		Admin currentAdmin = (Admin) session.getAttribute("ad");
+		building= dormitoryService.findManagerBuilding(currentAdmin.getA_id());
+		dormitory.setD_dormbuilding(building.getD_dormbuilding());
 		model.addAttribute("pageInfo",dormitoryService.findDormitoryStudent(dormitory));
 		return "dormitory_Studentlist";
 	}
