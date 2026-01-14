@@ -226,7 +226,7 @@
                             reason: '报修事由',
                             r_status: '维修状态',
                             create_time: '报修时间',
-                            r_time: '更新时间'
+                            r_time: '维修时间'
                         });
                         var colConf = excel.makeColConfig({
                             'F': 160,
