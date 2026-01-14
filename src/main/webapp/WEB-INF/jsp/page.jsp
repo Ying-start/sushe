@@ -12,39 +12,63 @@
 <div id="pagesData" style="text-align: center; margin-top: 10px;"></div>
 <script src="${pageContext.request.contextPath}/layui/layui.js" charset="utf-8"></script>
 <script>
-
     layui.use(['laypage', 'layer'], function () {
         var laypage = layui.laypage
             , layer = layui.layer;
 
-        // 接收父页面传递过来的基础URL，例如 /users/findAll
+        // 接收父页面传递过来的基础URL
         var baseUrl = "${param.url}";
 
-        // 渲染分页
         laypage.render({
             elem: 'pagesData'
-            , count: ${pageInfo.total} // 数据总数
+            , count: ${pageInfo.total}      // 数据总数
+            , limit: ${pageInfo.pageSize}   // 每页显示的条数
+            , limits: [ 3, 5, 10, 15]        // 条数选择
+            , curr: ${pageInfo.pageNum}     // 当前页
             , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
-            , limit: ${pageInfo.pageSize} // 每页显示的条数
-            , limits: [5, 10, 15] // 每页条数的选择项
-            , curr: ${pageInfo.pageNum} // 当前页
             , jump: function (obj, first) {
                 // 首次不执行，防止死循环
                 if (!first) {
-                    // 获取搜索框的值 (假设父页面都有一个 id="key" 的输入框)
-                    var keyVal = $("#key").val();
-                    if(keyVal == undefined) keyVal = "";
 
-                    // 构建跳转 URL
-                    // 注意：这里为了通用，搜索参数名可能需要根据实际情况调整
-                    // 原代码写的是 productName，建议后端统一用 keyword，或者这里判断一下
-                    var finalUrl = baseUrl + "?page=" + obj.curr + "&limit=" + obj.limit;
+                    // 1. 获取当前浏览器地址栏的参数
+                    var currentSearch = window.location.search;
+                    var params = {};
 
-                    if(keyVal !== ""){
-                        finalUrl += "&productName=" + keyVal; // 这里如果不同页面参数名不同，建议改为 &keyword=...
+                    // 2. 解析参数字符串
+                    if (currentSearch.indexOf("?") !== -1) {
+                        var str = currentSearch.substring(1);
+                        var strs = str.split("&");
+                        for (var i = 0; i < strs.length; i++) {
+                            var pair = strs[i].split("=");
+                            // 排除旧的分页参数，防止参数堆积 (同时排除 page/limit 和 pageIndex/pageSize)
+                            if (pair[0] !== "page" && pair[0] !== "limit" &&
+                                pair[0] !== "pageIndex" && pair[0] !== "pageSize") {
+                                if(pair.length > 1){
+                                    // 【修正点1】 正确的赋值方式：key 在方括号里，value 在等号右边
+                                    params[pair[0]] = pair[1];
+                                }
+                            }
+                        }
                     }
 
-                    location.href = finalUrl;
+                    // 3. 设置新的分页参数
+                    // 【修正点2】 参数名修改为 pageIndex 和 pageSize，以匹配你的后端 Controller
+                    params["page"] = obj.curr;
+                    params["limit"] = obj.limit;
+
+                    // 4. 重新拼接成 URL 字符串
+                    var queryString = "";
+                    for (var key in params) {
+                        queryString += "&" + key + "=" + params[key];
+                    }
+
+                    // 将第一个 '&' 替换为 '?'
+                    if (queryString.length > 0) {
+                        queryString = "?" + queryString.substring(1);
+                    }
+
+                    // 5. 跳转
+                    window.location.href = baseUrl + queryString;
                 }
             }
         });

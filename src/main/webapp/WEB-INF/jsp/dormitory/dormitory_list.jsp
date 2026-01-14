@@ -47,10 +47,10 @@
 <div class="x-body">
     <div class="layui-row">
         <form class="layui-form layui-col-md12 x-so" action="/findDormitory" >
-            <input class="layui-input" placeholder="请输入宿舍编号" name="s_dormitoryid" id="s_dormitoryid">
+            <input class="layui-input" placeholder="请输入宿舍编号" name="s_dormitoryid" id="s_dormitoryid" value="${param.s_dormitoryid}">
             <c:if test="${sessionScope.ad.a_power ==2}">
-                <input class="layui-input" placeholder="请输入宿舍楼" name="d_dormbuilding" id="d_dormbuilding">
-                <input class="layui-input" placeholder="请输入管理员姓名" name="a_name" id="a_name">
+                <input class="layui-input" placeholder="请输入宿舍楼" name="d_dormbuilding" id="d_dormbuilding" value="${param.d_dormbuilding}">
+                <input class="layui-input" placeholder="请输入管理员姓名" name="a_name" id="a_name" value="${param.a_name}">
             </c:if>
 
 

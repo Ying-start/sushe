@@ -47,7 +47,9 @@
     <div class="layui-row">
         <form class="layui-form layui-col-md12 x-so" action="/findDormitoryStudent" >
             <input class="layui-input" placeholder="请输入宿舍编号" name="s_dormitoryid" id="s_dormitoryid">
-
+            <c:if test="${sessionScope.ad.a_power ==2}">
+                <input class="layui-input" placeholder="请输入宿舍楼" name="d_dormbuilding" id="d_dormbuilding">
+            </c:if>
             <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
         </form>
     </div>

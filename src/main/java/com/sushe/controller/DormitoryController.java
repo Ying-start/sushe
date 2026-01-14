@@ -107,9 +107,9 @@ public class DormitoryController {
 	 * 宿舍人员信息查询
 	 */
 	@RequestMapping(value = "/findDormitoryStudent")
-	public String findDormitoryStudent(Dormitory dormitory,Model model,HttpSession session, Building building) {
+	public String findDormitoryStudent(Dormitory dormitory,Model model,HttpSession session ){
 		Admin currentAdmin = (Admin) session.getAttribute("ad");
-		building= buildingService.findManagerBuilding(currentAdmin.getA_id());
+	    Building building= buildingService.findManagerBuilding(currentAdmin.getA_id());
 		if(building!=null && currentAdmin.getA_power()!=2) {
 			dormitory.setD_dormbuilding(building.getD_dormbuilding());
 		}
