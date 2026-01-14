@@ -1,0 +1,242 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: hkw
+  Date: 2018/11/14
+  Time: 16:35
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<html>
+<head>
+    <title>修改信息</title>
+    <link rel="icon" href="/images/favicon.ico" sizes="32x32" />
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/xadmin.css">
+    <link rel="stylesheet" href="/css/pg_btn.css">
+    <script type="text/javascript" src="../../js/jquery-3.5.1.min.js"></script>
+    <script src="lib/layui/layui.js"></script>
+    <script type="text/javascript" src="./js/xadmin.js"></script>
+</head>
+
+<body>
+
+<div class="x-body">
+    <%--把表单封装成一个Admin对象传给服务端--%>
+    <form class="layui-form"  id="f_auto" action="/updateAdmin" method="post">
+        <input type="hidden" value="${sessionScope.a.a_id}" name="a_id" id="a_id" class="layui-input"/>
+        <div class="layui-form-item">
+            <label for="a_username" class="layui-form-label">
+                <span class="">用户名</span>
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="a_username" name="a_username"
+                       autocomplete="off" value="${sessionScope.a.a_username}" class="layui-input ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'layui-disabled' : ''}"
+
+                ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'disabled' : ''}>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="a_password" class="layui-form-label">
+                <span class="">密码</span>
+            </label>
+            <div class="layui-input-inline">
+                <input type="password" id="a_password" name="a_password"
+                       autocomplete="off"
+                       class="layui-input ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'layui-disabled' : ''}"
+
+                <%-- 1. 动态判断 placeholder 提示语 --%>
+                       placeholder="${sessionScope.ad.a_id != sessionScope.a.a_id ? '无权修改他人密码' : '如需更改密码，请输入新的密码'}"
+
+                <%-- 2. 核心逻辑：如果登录ID 不等于 被编辑ID，则禁用输入框 --%>
+                ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'disabled' : ''}>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="a_name" class="layui-form-label">
+                <span class="">姓名</span>
+            </label>
+            <div class="layui-input-inline">
+                <%-- 注意下面 layui-input 后面加了一个空格 --%>
+                <input type="text" id="a_name" name="a_name"
+                       autocomplete="off"
+                       value="${sessionScope.a.a_name}"
+                       class="layui-input ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'layui-disabled' : ''}"
+                ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'disabled' : ''}>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="a_phone" class="layui-form-label">
+                <span class="">电话</span>
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="a_phone" name="a_phone"
+                       autocomplete="off" value="${sessionScope.a.a_phone}" class="layui-input ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'layui-disabled' : ''}"
+
+                ${sessionScope.ad.a_id != sessionScope.a.a_id ? 'disabled' : ''}>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">级别</label>
+            <div class="layui-input-inline">
+
+                <%-- 1. 下拉框 --%>
+                <%-- 逻辑：如果当前登录用户(ad)是宿管(1)，则添加 disabled 属性 --%>
+                <select name="a_power"
+                ${sessionScope.ad.a_power == 1 ? 'disabled' : ''}>
+
+                    <option value="1" ${sessionScope.a.a_power == 1 ? 'selected' : ''}>宿舍管理员</option>
+                    <option value="2" ${sessionScope.a.a_power == 2 ? 'selected' : ''}>管理员</option>
+                </select>
+
+                <%-- 2. 隐藏域 (关键！) --%>
+                <%-- 如果下拉框被禁用了，必须用这个隐藏域把值传回去，否则后台接收到的 power 会是 null --%>
+                <c:if test="${sessionScope.ad.a_power == 1}">
+                    <input type="hidden" name="a_power" value="${sessionScope.a.a_power}">
+                </c:if>
+
+            </div>
+        </div>
+
+
+
+        <div class="layui-form-item" id="btn_xg">
+            <button  class="layui-btn" id="btn_on"  lay-submit="" lay-filter="updateAdmin">
+                修改
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['form','layer','laydate'], function(){
+        var form = layui.form,
+            $ = layui.jquery,
+            laydate = layui.laydate;
+
+        // ❌ 必须删除这行！修改页面不能重置表单，否则会把刚回显的数据清空
+        // $("#f_auto")[0].reset();
+
+        form.on('submit(formDemo)', function(data) {
+
+            var param = data.field;
+
+            $.ajax({
+                url: '/updateAdmin',
+                type: "post",
+                data: JSON.stringify(param),
+                contentType: "application/json; charset=utf-8",
+                success: function (da) {
+                    console.log(da);
+                    layer.msg('更改成功', {icon: 1, time: 2000});
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
+
+                },
+                error: function () {
+                    layer.msg('更改失败', {icon: 0, time: 2000});
+                    setTimeout(function () {
+                        window.location.href = '/findAdmin';
+                    }, 2000);
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+<style>
+    /* 1. 容器样式：让整个区域居中显示，背景微灰（如果body不是灰的） */
+    .x-body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding-top: 50px; /* 距离顶部一段距离 */
+        min-height: 100vh;
+        box-sizing: border-box;
+    }
+
+    /* 2. 表单卡片：白色背景、阴影、圆角 */
+    #f_auto {
+        width: 500px;
+        background-color: #fff;
+        padding: 40px 50px;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); /* 柔和的悬浮阴影 */
+    }
+
+    /* 3. 表单行间距优化 */
+    .layui-form-item {
+        margin-bottom: 25px; /* 拉大间距，不再拥挤 */
+        clear: both;
+    }
+
+    /* 4. 标签美化：右对齐、灰色字体 */
+    .layui-form-label {
+        float: left;
+        display: block;
+        padding: 10px 15px;
+        width: 90px;
+        font-weight: 500;
+        color: #666;
+        text-align: right;
+    }
+
+    /* 5. 输入框容器 */
+    .layui-input-inline {
+        float: left;
+        width: 300px; /* 固定宽度，整齐划一 */
+        margin-right: 0;
+    }
+
+    /* 6. 输入框本体：增高、淡灰背景、过渡动画 */
+    .layui-input {
+        height: 42px;
+        line-height: 42px;
+        border-radius: 4px;
+        border: 1px solid #e6e6e6;
+        background-color: #fafafa; /* 极淡的灰底 */
+        transition: all 0.3s;
+        padding-left: 12px;
+    }
+
+    /* 输入框聚焦效果：绿色边框+光晕 */
+    .layui-input:focus {
+        border-color: #009688 !important;
+        background-color: #fff;
+        box-shadow: 0 0 0 3px rgba(0, 150, 136, 0.1);
+    }
+
+    /* 7. 按钮区域：居中 + 上方留白 */
+    #btn_xg {
+        margin-top: 40px;
+        text-align: center;
+        padding-left: 40px; /* 微调以视觉居中(抵消label宽度带来的偏移) */
+    }
+
+    /* 8. 按钮本体：宽大、投影、悬停上浮 */
+    .layui-btn {
+        width: 200px; /* 宽按钮更易点击 */
+        height: 45px;
+        line-height: 45px;
+        font-size: 16px;
+        background-color: #009688;
+        border-radius: 30px; /* 半圆角按钮，更现代 */
+        box-shadow: 0 4px 10px rgba(0, 150, 136, 0.3);
+        border: none;
+        cursor: pointer;
+        transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .layui-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px); /* 鼠标悬停上浮效果 */
+    }
+</style>
+</body>
+</html>
